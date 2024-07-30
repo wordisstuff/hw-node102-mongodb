@@ -18,6 +18,6 @@ export const setupServer = () => {
 
     const PORT = authDb.port;
     app.listen(PORT , () => {
-        console.log('Server started on port 3000');
+        console.log(`Server started on port ${PORT}`);
     });
 };
