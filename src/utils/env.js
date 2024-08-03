@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 
-
 dotenv.config();
 
 export const env = (name, defName) => {
@@ -9,5 +8,3 @@ export const env = (name, defName) => {
 
     throw new Error(`Environment variable ${name} is not set`);
 };
-
-

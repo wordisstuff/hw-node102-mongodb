@@ -1,7 +1,9 @@
-
+import express from 'express';
 
 export const pinoSettings = {
     transport: {
-        target: 'pino-pretty'
-    }
+        target: 'pino-pretty',
+    },
 };
+
+export const jsonParser = express.json();
