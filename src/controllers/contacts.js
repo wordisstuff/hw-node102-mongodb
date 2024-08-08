@@ -6,9 +6,11 @@ import {
     patchContact,
     deleteContact,
 } from '../services/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export const getAllContactsController = async (req, res, next) => {
-    const contacts = await getContacts();
+    const {page,perPage} = parsePaginationParams(req.query)
+    const contacts = await getContacts({page,perPage});
     res.json({
         data: contacts,
         message: 'All contacts',
