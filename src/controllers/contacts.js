@@ -7,10 +7,12 @@ import {
     deleteContact,
 } from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import parseSortParams from '../utils/parseSortParams.js';
 
 export const getAllContactsController = async (req, res, next) => {
-    const {page,perPage} = parsePaginationParams(req.query)
-    const contacts = await getContacts({page,perPage});
+    const { page, perPage } = parsePaginationParams(req.query);
+    const { sortOrder, sortBy } = parseSortParams(req.query);
+    const contacts = await getContacts({ page, perPage, sortBy, sortOrder });
     res.json({
         data: contacts,
         message: 'All contacts',

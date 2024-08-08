@@ -15,3 +15,8 @@ export const authDb = {
     url: env(VARS.URL),
     db: env(VARS.DB),
 };
+
+export const SORT_ORDER = {
+    ASC: 'asc',
+    DESC: 'desc',
+};
