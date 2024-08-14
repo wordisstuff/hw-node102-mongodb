@@ -7,3 +7,5 @@ export const pinoSettings = {
 };
 
 export const jsonParser = express.json();
+
+export const schemaObjectString = { type: String, required: true };
