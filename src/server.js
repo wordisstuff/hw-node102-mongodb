@@ -14,8 +14,10 @@ export const setupServer = () => {
     app.use(pino(pinoSettings));
     app.use(cors());
 
-    app.get('/', (req,res)=> res.send('Hello! it is home work 4 from Wordisstuff'));
-    app.use('/contacts', Router);
+    app.get('/', (req, res) =>
+        res.send('Hello! it is home work 4 from Wordisstuff'),
+    );
+    app.use(Router);
 
     app.use(notFindeMiddleware);
     app.use(errorHandler);

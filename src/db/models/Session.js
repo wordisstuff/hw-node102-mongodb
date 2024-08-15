@@ -1,13 +1,15 @@
 import { model, Schema } from 'mongoose';
 import { schemaObjectString } from '../../constants/constants.js';
 
-const sessionSchema = new Schema(
+const sessionsSchema = new Schema(
     {
-        userId: schemaObjectString,
+        userId: { type: Schema.Types.ObjectId, ref: 'users' },
         accessToken: schemaObjectString,
         refreshToken: schemaObjectString,
+        accessTokenValidUntil: { type: Date, required: true },
+        refreshTokenValidUntil: { type: Date, required: true },
     },
     { timestamps: true, versionKey: false },
 );
 
-export const SessionCollection = model('session', sessionSchema);
+export const SessionsCollection = model('sessions', sessionsSchema);

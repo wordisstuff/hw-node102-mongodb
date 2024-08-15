@@ -20,3 +20,6 @@ export const SORT_ORDER = {
     ASC: 'asc',
     DESC: 'desc',
 };
+
+export const FIFTEEN_MINUTES = 900000;
+export const ONE_DAY = 86400000;
