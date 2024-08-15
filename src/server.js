@@ -5,7 +5,7 @@ import { pinoSettings } from './constants/constants.js';
 import { authDb } from './constants/index.js';
 import { notFindeMiddleware } from './middlewares/notFindeMiddleware.js';
 
-import contactsRouter from './routers/contacts.js';
+import Router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 export const setupServer = () => {
@@ -15,7 +15,7 @@ export const setupServer = () => {
     app.use(cors());
 
     app.get('/', (req,res)=> res.send('Hello! it is home work 4 from Wordisstuff'));
-    app.use('/contacts', contactsRouter);
+    app.use('/contacts', Router);
 
     app.use(notFindeMiddleware);
     app.use(errorHandler);
