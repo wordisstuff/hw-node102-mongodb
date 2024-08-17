@@ -8,8 +8,8 @@ export const getContacts = async ({
     sortOrder,
     sortBy,
     filter,
+    userId,
 }) => {
-    console.log('CE YA', page, perPage);
     const skip = (page - 1) * perPage;
 
     const contactsQuery = Contact.find();
@@ -17,6 +17,8 @@ export const getContacts = async ({
         contactsQuery.where('isFavourite').equals(filter.isFavourite);
     if (filter.contactType)
         contactsQuery.where('contactType').equals(filter.contactType);
+
+    contactsQuery.where('userId').equals(userId);
 
     const [contactsCount, contacts] = await Promise.all([
         Contact.find().merge(contactsQuery).countDocuments(),
@@ -37,7 +39,10 @@ export const getContacts = async ({
     return { data: contacts, ...paginationData };
 };
 export const getContactById = id => Contact.findById(id);
+
 export const postContact = body => Contact.create(body);
+
 export const patchContact = (id, body) =>
     Contact.findByIdAndUpdate(id, body, { new: true });
+
 export const deleteContact = id => Contact.findByIdAndDelete(id);

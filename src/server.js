@@ -7,12 +7,14 @@ import { notFindeMiddleware } from './middlewares/notFindeMiddleware.js';
 
 import Router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 export const setupServer = () => {
     const app = express();
 
     app.use(pino(pinoSettings));
     app.use(cors());
+    app.use(cookieParser());
 
     app.get('/', (req, res) =>
         res.send('Hello! it is home work 4 from Wordisstuff'),

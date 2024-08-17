@@ -13,6 +13,7 @@ const contactsSchema = new Schema(
             type: String,
             required: true,
         },
+        userId: { type: Schema.Types.ObjectId, required: true },
         isFavourite: { type: Boolean, default: false },
         contactType: {
             type: String,

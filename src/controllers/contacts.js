@@ -11,8 +11,9 @@ import parseSortParams from '../utils/parseSortParams.js';
 import parseFilterParams from '../utils/parseFilterParams.js';
 
 export const getAllContactsController = async (req, res, next) => {
+    console.log('CoNTACTS', req.user);
+
     const { page, perPage } = parsePaginationParams(req.query);
-    console.log(page, perPage);
     const { sortOrder, sortBy } = parseSortParams(req.query);
     const filter = parseFilterParams(req.query);
 
@@ -22,10 +23,11 @@ export const getAllContactsController = async (req, res, next) => {
         sortBy,
         sortOrder,
         filter,
+        userId: req.user._id,
     });
     res.json({
         status: 200,
-        message: "Successfully found contacts!",
+        message: 'Successfully found contacts!',
         data: contacts,
     });
 };
@@ -38,6 +40,12 @@ export const getContactByIdController = async (req, res, next) => {
         next(createHttpError(404, 'Contact not found.'));
         return;
     }
+
+    if (contact.userId.toString() !== req.user._id.toString()) {
+        next(createHttpError(403, 'Contact not allowed!'));
+        return;
+    }
+
     res.json({
         status: 200,
         message: `Successfully found contact ${id} `,
@@ -46,7 +54,7 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res, next) => {
-    const contact = await postContact(req.body);
+    const contact = await postContact({ ...req.body, userId: req.user._id });
 
     res.status(201).json({
         status: 201,

@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
-import { randomBytes } from 'crypto';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/Session.js';
+import randomToken from '../utils/randomToken.js';
 
 export const registerUser = async payload => {
     console.log('payload', payload);
@@ -20,6 +20,7 @@ export const registerUser = async payload => {
 
 export const loginUser = async payload => {
     const user = await UserCollection.findOne({ email: payload.email });
+    console.log('1', user);
 
     if (!user) throw createHttpError(404, 'User not found!');
 
@@ -28,14 +29,37 @@ export const loginUser = async payload => {
 
     await SessionsCollection.deleteOne({ userId: user._id });
 
-    const accessToken = randomBytes(30).toString('base64');
-    const refreshToken = randomBytes(30).toString('base64');
-
-    return SessionsCollection.create({
+    return await SessionsCollection.create({
         userId: user._id,
-        accessToken,
+        accessToken: randomToken(30, 'base64'),
+        refreshToken: randomToken(30, 'base64'),
+        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+        refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    });
+};
+
+export const logoutUser = sessionId => {
+    SessionsCollection.deleteOne({ _id: sessionId });
+};
+
+export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
+    const session = await SessionsCollection.findOne({
+        _id: sessionId,
         refreshToken,
-        accessTokenValidUntil: new Date(Date.now + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now + ONE_DAY),
+    });
+
+    if (!session) throw createHttpError(401, 'Session not found');
+
+    if (new Date() > new Date(session.refreshTokenValidUntil))
+        throw createHttpError(401, 'Session token expired');
+
+    await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
+
+    return await SessionsCollection.create({
+        userId: session.userId,
+        accessToken: randomToken(30, 'base64'),
+        refreshToken: randomToken(30, 'base64'),
+        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+        refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
     });
 };
