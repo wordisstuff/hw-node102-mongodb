@@ -1,5 +1,4 @@
 import { model, Schema } from 'mongoose';
-// import { schemaObjectString } from '../../constants/constants.js';
 
 const userSchema = new Schema(
     {
