@@ -2,6 +2,7 @@ import { Contact } from '../db/models/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 // import { SORT_ORDER } from '../constants/index.js';
 
+export const findContactByEmail = email => Contact.findOne({ email });
 export const getContacts = async ({
     page,
     perPage,
