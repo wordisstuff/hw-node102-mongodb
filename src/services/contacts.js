@@ -39,11 +39,11 @@ export const getContacts = async ({
 
     return { data: contacts, ...paginationData };
 };
-export const getContactById = id => Contact.findById(id);
+export const getContactById = id => Contact.findOne(id);
 
 export const postContact = body => Contact.create(body);
 
 export const patchContact = (id, body) =>
-    Contact.findByIdAndUpdate(id, body, { new: true });
+    Contact.findOneAndUpdate(id, body, { new: true });
 
-export const deleteContact = id => Contact.findByIdAndDelete(id);
+export const deleteContact = id => Contact.findOneAndDelete(id);
