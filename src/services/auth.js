@@ -1,9 +1,11 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
+import { FIFTEEN_MINUTES, ONE_DAY, smtp } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 import randomToken from '../utils/randomToken.js';
+import jwt from 'jsonwebtoken';
+import { sendEmail } from '../utils/sendMail.js';
 
 export const registerUser = async payload => {
     console.log('payload', payload);
@@ -61,5 +63,23 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
         refreshToken: randomToken(30, 'base64'),
         accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
         refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+    });
+};
+export const requestResetToken = async email => {
+    const user = UserCollection.findOne({ email });
+
+    if (!user) throw createHttpError(404, 'User not found!');
+
+    const resetToken = jwt.sign({ sub: user._id, email }, smtp.smtpJwtSecret, {
+        expiresIn: '15m',
+    });
+
+    console.log('RESSETETETET', resetToken);
+
+    await sendEmail({
+        from: smtp.from,
+        to: email,
+        subject: 'Reset your password',
+        html: `<p> Jump <a href="${resetToken}"> here </a> to reset your password!</p>`,
     });
 };

@@ -23,3 +23,24 @@ export const SORT_ORDER = {
 
 export const FIFTEEN_MINUTES = 900000;
 export const ONE_DAY = 86400000;
+
+const SMTP = {
+    SMTP_HOST: 'SMTP_HOST',
+    SMTP_PORT: 'SMTP_PORT',
+    SMTP_USER: 'SMTP_USER',
+    SMTP_PASSWORD: 'SMTP_PASSWORD',
+    SMTP_FROM: 'SMTP_FROM',
+};
+
+export const smtp = {
+    auth: {
+        host: env(SMTP.SMTP_HOST),
+        port: Number(env(SMTP.SMTP_PORT)),
+        auth: {
+            user: env(SMTP.SMTP_USER),
+            pass: env(SMTP.SMTP_PASSWORD),
+        },
+        smtpJwtSecret: env('JWT_SECRET'),
+        from: env(SMTP.SMTP_FROM),
+    },
+};
