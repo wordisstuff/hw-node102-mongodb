@@ -32,10 +32,10 @@ export const getAllContactsController = async (req, res, next) => {
 };
 
 export const getContactByIdController = async (req, res, next) => {
-    const { id } = req.params;
+    const ids = { _id: req.params.id, userId: req.user._id };
 
-    const contact = await getContactById(id);
-    console.log('contact', contact);
+    const contact = await getContactById(ids);
+
     if (!contact) {
         next(createHttpError(404, 'Contact not found.'));
         return;
@@ -43,16 +43,16 @@ export const getContactByIdController = async (req, res, next) => {
 
     if (
         contact.userId !== undefined
-            ? contact.userId.toString()
-            : null !== req.user._id.toString()
+            ? contact.userId.toString() !== req.user._id.toString()
+            : null
     ) {
-        next(createHttpError(403, 'Contact not allowed!'));
+        next(createHttpError(403, 'Contact not allowed!!'));
         return;
     }
 
     res.json({
         status: 200,
-        message: `Successfully found contact ${id} `,
+        message: `Successfully found contact ${ids._id} `,
         data: contact,
     });
 };
@@ -75,40 +75,47 @@ export const createContactController = async (req, res, next) => {
 };
 
 export const updateContactController = async (req, res, next) => {
-    const { id } = req.params;
-
-    const contact = await patchContact(id, req.body);
-
-    if (contact.userId.toString() !== req.user._id.toString()) {
+    const ids = { _id: req.params.id, userId: req.user._id.toString() };
+    console.log(ids);
+    const contact = await getContactById(ids);
+    console.log(contact);
+    if (
+        contact !== null || contact.userId
+            ? contact.userId.toString() !== req.user._id.toString()
+            : false
+    ) {
         next(createHttpError(403, 'Contact not allowed!'));
         return;
     }
+    const updatedContact = await patchContact(ids, req.body);
 
-    if (!contact) {
+    if (!updatedContact) {
         next(createHttpError(404, 'Contact not found'));
         res.json({ data: { message: 'Contact not found' } });
         return;
     }
     res.json({
         status: 200,
-        message: `Successfully updated contact with id ${id}!`,
-        data: contact,
+        message: `Successfully updated contact with id ${ids._id}!`,
+        data: updatedContact,
     });
 };
 
 export const deleteContactController = async (req, res, next) => {
-    const { id } = req.params;
-    const data = await getContactById(id);
+    const ids = { _id: req.params.id, userId: req.user._id };
+
+    const data = await getContactById(ids);
+    console.log(data);
     if (
-        data !== null
-            ? data.userId.toString()
-            : null !== req.user._id.toString()
+        data !== null || data.userId
+            ? data.userId.toString() !== req.user._id.toString()
+            : null
     ) {
         next(createHttpError(403, 'Contact not allowed!!!'));
         return;
     }
 
-    const contact = await deleteContact(id);
+    const contact = await deleteContact(ids);
 
     if (!contact) {
         next(createHttpError(404, 'Contact not found'));
