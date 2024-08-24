@@ -39,7 +39,7 @@ export const getContacts = async ({
 
     return { data: contacts, ...paginationData };
 };
-export const getContactById = ids => Contact.findById(ids._id);
+export const getContactById = ids => Contact.findOne(ids);
 
 export const postContact = body => Contact.create(body);
 

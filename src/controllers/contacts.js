@@ -37,16 +37,7 @@ export const getContactByIdController = async (req, res, next) => {
     const contact = await getContactById(ids);
 
     if (!contact) {
-        next(createHttpError(404, 'Contact not found.'));
-        return;
-    }
-
-    if (
-        contact.userId !== undefined
-            ? contact.userId.toString() !== req.user._id.toString()
-            : null
-    ) {
-        next(createHttpError(403, 'Contact not allowed!!'));
+        next(createHttpError(404, 'Contact not found! or... ;)'));
         return;
     }
 
@@ -76,13 +67,13 @@ export const createContactController = async (req, res, next) => {
 
 export const updateContactController = async (req, res, next) => {
     const ids = { _id: req.params.id, userId: req.user._id.toString() };
-    console.log(ids);
+
     const contact = await getContactById(ids);
-    console.log(contact);
+
     if (
-        contact !== null || contact.userId
-            ? contact.userId.toString() !== req.user._id.toString()
-            : false
+        contact === null ||
+        contact.userId === null ||
+        contact.userId.toString() !== req.user._id.toString()
     ) {
         next(createHttpError(403, 'Contact not allowed!'));
         return;
@@ -105,7 +96,7 @@ export const deleteContactController = async (req, res, next) => {
     const ids = { _id: req.params.id, userId: req.user._id };
 
     const data = await getContactById(ids);
-    console.log(data);
+
     if (
         data !== null || data.userId
             ? data.userId.toString() !== req.user._id.toString()
