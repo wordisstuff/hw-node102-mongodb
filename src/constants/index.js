@@ -40,7 +40,11 @@ export const smtp = {
             user: env(SMTP.SMTP_USER),
             pass: env(SMTP.SMTP_PASSWORD),
         },
-        smtpJwtSecret: env('JWT_SECRET'),
-        from: env(SMTP.SMTP_FROM),
     },
+    smtpJwtSecret: env('JWT_SECRET'),
+    from: env(SMTP.SMTP_FROM),
+};
+
+export const tps = {
+    domain: env('APP_DOMAIN'),
 };

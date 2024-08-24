@@ -1,11 +1,18 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
-import { FIFTEEN_MINUTES, ONE_DAY, smtp } from '../constants/index.js';
+import {
+    FIFTEEN_MINUTES,
+    ONE_DAY,
+    smtp,
+    tps,
+    authDb,
+} from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 import randomToken from '../utils/randomToken.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/sendMail.js';
+import templateMaker from '../utils/templateMaker.js';
 
 export const registerUser = async payload => {
     console.log('payload', payload);
@@ -66,20 +73,41 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     });
 };
 export const requestResetToken = async email => {
-    const user = UserCollection.findOne({ email });
+    const user = await UserCollection.findOne({ email });
+    console.log(user);
 
     if (!user) throw createHttpError(404, 'User not found!');
 
     const resetToken = jwt.sign({ sub: user._id, email }, smtp.smtpJwtSecret, {
-        expiresIn: '15m',
+        expiresIn: '5m',
     });
 
-    console.log('RESSETETETET', resetToken);
+    const html = templateMaker({
+        name: user.name,
+        link: `${tps.domain}${authDb.port}/reset-password?token=${resetToken}`,
+    });
 
     await sendEmail({
         from: smtp.from,
         to: email,
         subject: 'Reset your password',
-        html: `<p> Jump <a href="${resetToken}"> here </a> to reset your password!</p>`,
+        html,
     });
+};
+
+export const resetPassword = async (pass, token) => {
+    try {
+        const { sub, email } = jwt.verify(token, smtp.smtpJwtSecret);
+        const user = await UserCollection.findOne({ _id: sub, email });
+        if (!user) throw createHttpError(404, 'User no found');
+
+        const hashedPassword = await bcrypt.hash(pass, 10);
+        await UserCollection.findOneAndUpdate(
+            { _id: user._id },
+            { password: hashedPassword },
+        );
+    } catch (err) {
+        if (err instanceof Error) throw createHttpError(401, err.message);
+        throw err;
+    }
 };
