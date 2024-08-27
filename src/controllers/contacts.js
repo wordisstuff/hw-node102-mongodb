@@ -10,6 +10,7 @@ import {
 import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import parseFilterParams from '../utils/parseFilterParams.js';
+import saveFileToUploads from '../utils/saveFileToUploads.js';
 
 export const getAllContactsController = async (req, res, next) => {
     const { page, perPage } = parsePaginationParams(req.query);
@@ -50,13 +51,25 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
     const { email } = req.body;
+    const photo = req.file;
+    console.log(photo);
+    let photoUrl = null;
+
     const usedEmail = await findContactByEmail(email);
     if (usedEmail) {
         next(createHttpError(409, 'Email in use!'));
         return;
     }
+    if (photo) {
+        photoUrl = await saveFileToUploads(photo);
+    }
+    console.log('TTTTTTTTTT', photoUrl);
 
-    const contact = await postContact({ ...req.body, userId: req.user._id });
+    const contact = await postContact({
+        ...req.body,
+        userId: req.user._id,
+        photo: photoUrl,
+    });
 
     res.status(201).json({
         status: 201,

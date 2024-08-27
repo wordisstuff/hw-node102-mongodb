@@ -20,6 +20,7 @@ const contactsSchema = new Schema(
             enum: ['work', 'personal', 'home'],
             default: 'personal',
         },
+        photo: { type: String },
     },
     { timestamps: true, versionKey: false },
 );
