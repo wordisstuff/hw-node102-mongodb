@@ -48,3 +48,17 @@ export const smtp = {
 export const tps = {
     domain: env('APP_DOMAIN'),
 };
+
+const CLOUDINARY = {
+    CLOUD_NAME: 'CLOUD_NAME',
+    API_KEY: 'API_KEY',
+    API_SECRET: 'API_SECRET',
+    ENABLE_CLOUDINARY: 'ENABLE_CLOUDINARY',
+};
+
+export const cloudApi = {
+    name: env(CLOUDINARY.CLOUD_NAME),
+    key: env(CLOUDINARY.API_KEY),
+    secret: env(CLOUDINARY.API_SECRET),
+    enable: env(CLOUDINARY.ENABLE_CLOUDINARY),
+};

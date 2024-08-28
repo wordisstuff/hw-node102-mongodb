@@ -11,6 +11,8 @@ import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import parseFilterParams from '../utils/parseFilterParams.js';
 import saveFileToUploads from '../utils/saveFileToUploads.js';
+import { cloudApi } from '../constants/index.js';
+import saveFileToCloudinary from '../utils/saveFileToCloudinary.js';
 
 export const getAllContactsController = async (req, res, next) => {
     const { page, perPage } = parsePaginationParams(req.query);
@@ -52,7 +54,6 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
     const { email } = req.body;
     const photo = req.file;
-    console.log(photo);
     let photoUrl = null;
 
     const usedEmail = await findContactByEmail(email);
@@ -61,7 +62,11 @@ export const createContactController = async (req, res, next) => {
         return;
     }
     if (photo) {
-        photoUrl = await saveFileToUploads(photo);
+        if (cloudApi.ENABLE_CLOUDINARY === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploads(photo);
+        }
     }
     console.log('TTTTTTTTTT', photoUrl);
 
@@ -80,7 +85,8 @@ export const createContactController = async (req, res, next) => {
 
 export const updateContactController = async (req, res, next) => {
     const ids = { _id: req.params.id, userId: req.user._id.toString() };
-
+    const photo = req.file;
+    let photoUrl;
     const contact = await getContactById(ids);
 
     if (
@@ -91,7 +97,19 @@ export const updateContactController = async (req, res, next) => {
         next(createHttpError(403, 'Contact not allowed!'));
         return;
     }
-    const updatedContact = await patchContact(ids, req.body);
+
+    if (photo) {
+        if (cloudApi.ENABLE_CLOUDINARY === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploads(photo);
+        }
+    }
+
+    const updatedContact = await patchContact(ids, {
+        ...req.body,
+        photo: photoUrl,
+    });
 
     if (!updatedContact) {
         next(createHttpError(404, 'Contact not found'));
