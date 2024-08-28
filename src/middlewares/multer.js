@@ -1,7 +1,7 @@
 import multer from 'multer';
 import { TEMP_UPLOAD_DIR } from '../constants/constants.js';
 
-const storege = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, TEMP_UPLOAD_DIR);
     },
@@ -10,5 +10,5 @@ const storege = multer.diskStorage({
     },
 });
 
-const uploader = multer({ storege });
+const uploader = multer({ storage });
 export default uploader;
