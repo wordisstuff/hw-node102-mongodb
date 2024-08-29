@@ -62,13 +62,12 @@ export const createContactController = async (req, res, next) => {
         return;
     }
     if (photo) {
-        if (cloudApi.ENABLE_CLOUDINARY === 'true') {
+        if (cloudApi.enable === 'true') {
             photoUrl = await saveFileToCloudinary(photo);
         } else {
             photoUrl = await saveFileToUploads(photo);
         }
     }
-    console.log('TTTTTTTTTT', photoUrl);
 
     const contact = await postContact({
         ...req.body,
@@ -99,7 +98,7 @@ export const updateContactController = async (req, res, next) => {
     }
 
     if (photo) {
-        if (cloudApi.ENABLE_CLOUDINARY === 'true') {
+        if (cloudApi.enable === 'true') {
             photoUrl = await saveFileToCloudinary(photo);
         } else {
             photoUrl = await saveFileToUploads(photo);

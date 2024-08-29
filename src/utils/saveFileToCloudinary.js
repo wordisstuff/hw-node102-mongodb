@@ -21,6 +21,7 @@ const saveFileToCloudinary = async file => {
     const res = await cloudinary.v2.uploader.upload(file.path);
     deleteFile(file.path);
     console.log('saveFileToCloudinary', res);
+
     return res.secure_url;
 };
 
