@@ -5,9 +5,7 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
-router.use('/contacts', 
-           authenticate,
-           contactsRouter);
+router.use('/contacts', authenticate, contactsRouter);
 router.use('/auth', authRouter);
 
 export default router;

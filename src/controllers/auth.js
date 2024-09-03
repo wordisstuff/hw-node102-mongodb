@@ -1,3 +1,4 @@
+import createHttpError from 'http-errors';
 import { ONE_DAY } from '../constants/index.js';
 import {
     registerUser,
@@ -74,7 +75,17 @@ export const refreshUserSessionController = async (req, res) => {
 };
 
 export const requestResetEmailController = async (req, res) => {
-    await requestResetToken(req.body.email);
+    const resetEmail = req.body.email;
+    console.log(resetEmail);
+    if (!resetEmail) {
+        throw createHttpError(
+            500,
+            'Failed to send the email, please try again later.',
+        );
+    }
+
+    await requestResetToken(resetEmail);
+
     res.json({
         message: 'Reset password email was successfully sent!',
         status: 200,
