@@ -1,18 +1,17 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
-import {
-    FIFTEEN_MINUTES,
-    ONE_DAY,
-    smtp,
-    tps,
-    authDb,
-} from '../constants/index.js';
+import { smtp, tps, authDb } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 import randomToken from '../utils/randomToken.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/sendMail.js';
 import templateMaker from '../utils/templateMaker.js';
+import {
+    getFullNameFromGoogleTokenPayload,
+    validateCode,
+} from '../utils/googleOAuth2.js';
+import createSession from '../utils/createSession.js';
 
 export const registerUser = async payload => {
     console.log('payload', payload);
@@ -38,13 +37,8 @@ export const loginUser = async payload => {
 
     await SessionsCollection.deleteOne({ userId: user._id });
 
-    return await SessionsCollection.create({
-        userId: user._id,
-        accessToken: randomToken(30, 'base64'),
-        refreshToken: randomToken(30, 'base64'),
-        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
-    });
+    const newSession = await createSession({ userId: user._id });
+    return await SessionsCollection.create(newSession);
 };
 
 export const logoutUser = async sessionId => {
@@ -64,13 +58,8 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 
     await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
 
-    return await SessionsCollection.create({
-        userId: session.userId,
-        accessToken: randomToken(30, 'base64'),
-        refreshToken: randomToken(30, 'base64'),
-        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
-    });
+    const newSession = await createSession({ userId: session.userId });
+    return await SessionsCollection.create(newSession);
 };
 export const requestResetToken = async email => {
     const user = await UserCollection.findOne({ email });
@@ -110,4 +99,27 @@ export const resetPassword = async (pass, token) => {
         if (err instanceof Error) throw createHttpError(401, err.message);
         throw err;
     }
+};
+
+export const loginOrSignupWithGoogle = async code => {
+    const loginTicket = await validateCode(code);
+    console.log(loginTicket);
+    const payload = loginTicket.getPayload();
+    console.log(payload);
+    if (!payload) throw createHttpError(401);
+
+    const user = await UserCollection.findOne({ email: payload.email });
+    if (!user) {
+        const password = await bcrypt.hash(randomToken(10, 'base64'), 10);
+        const newUser = await UserCollection.create({
+            email: payload.email,
+            name: getFullNameFromGoogleTokenPayload(payload),
+            password,
+        });
+        const session = await createSession({ userId: newUser._id });
+        return await SessionsCollection.create(session);
+    }
+    await SessionsCollection.deleteOne({ userId: user._id });
+    const session = await createSession({ userId: user._id });
+    return await SessionsCollection.create(session);
 };

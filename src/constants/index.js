@@ -1,4 +1,5 @@
 import { env } from '../utils/env.js';
+import { JSON_PATH } from './constants.js';
 
 const VARS = {
     PORT: 'PORT',
@@ -61,4 +62,15 @@ export const cloudApi = {
     key: env(CLOUDINARY.API_KEY),
     secret: env(CLOUDINARY.API_SECRET),
     enable: env(CLOUDINARY.ENABLE_CLOUDINARY),
+};
+
+const GOOGLE_AUTH = {
+    CLIENT_ID: 'GOOGLE_AUTH_CLIENT_ID',
+    CLIENT_SECRET: 'GOOGLE_AUTH_CLIENT_SECRET',
+};
+
+export const OAuth = {
+    clientId: env(GOOGLE_AUTH.CLIENT_ID),
+    clientSecret: env(GOOGLE_AUTH.CLIENT_SECRET),
+    jsonPath: JSON_PATH,
 };

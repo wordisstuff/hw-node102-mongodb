@@ -13,3 +13,4 @@ export const schemaObjectString = { type: String, required: true };
 
 export const TEMP_UPLOAD_DIR = path.resolve('src', 'temp');
 export const UPLOAD_DIR = path.resolve('src', 'uploads');
+export const JSON_PATH = path.join(process.cwd(), 'google-oauth.json');
