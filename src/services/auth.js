@@ -73,8 +73,9 @@ export const requestResetToken = async email => {
 
     const html = templateMaker({
         name: user.name,
-        link: `${tps.domain}${authDb.port}/reset-password?token=${resetToken}`,
+        link: `${tps.domain}${authDb.port}/reset-pwd?token=${resetToken}`,
     });
+    console.log('HTML', html);
 
     await sendEmail({
         from: smtp.from,

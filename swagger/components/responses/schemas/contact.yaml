@@ -1,0 +1,37 @@
+type: object
+properties:
+    _id:
+        description: 'Contact id'
+        type: string
+        example: 00a0b00000000000c0de0f00
+    name:
+        description: 'Contact name'
+        type: string
+        example: 'Henry Moor'
+    email:
+        description: 'Contact email'
+        type: string
+        example: 'HenryMoor@mail.ua'
+    phoneNumber:
+        description: 'Contact phone number'
+        type: string
+        example: '1111111111'
+    userId:
+        description: 'ID of the user who created the contact '
+        type: Schema.Types.ObjectId,
+        example: 00a0b00000000000c0de0f00
+        isFavourite:
+            description: 'Contact is favourite'
+            type: boolean
+            defoult: false
+    contactType:
+        description: 'Contact type'
+        type: string
+        enum: ['work', 'personal', 'home']
+        default: 'personal'
+        example: 'work'
+    photo:
+        description: 'Contact photo'
+        type: string
+        example: 'http://localhost:3000/uploads/photo.png'
+        default: null
