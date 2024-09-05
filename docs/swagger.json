@@ -24,6 +24,11 @@
       "description": "Auth operations"
     }
   ],
+  "paths": {
+    "/contacts/{id}": {
+      "get": null
+    }
+  },
   "components": {
     "securitySchemes": {
       "bearerAuth": {

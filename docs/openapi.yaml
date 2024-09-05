@@ -10,17 +10,15 @@ tags:
     - name: Contacts
       description: Contact operations
     - name: Auth
-      description:
-          Auth operations
-          # теги, що ви будете використовувати
+      description: Auth operations
 servers:
     - url: http://localhost:8080
-    paths:
-      /contacts/{id}:
-        get:
-          $ref: ../swagger/paths/contacts/{id}/get.yaml
+paths:
+  /contacts/{id}:
+    get:
+      $ref: ../swagger/paths/contacts/{id}/get.yaml
 components:
-    securitySchemes:
-        bearerAuth:
-            type: http
-            scheme: bearer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

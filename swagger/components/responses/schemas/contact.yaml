@@ -1,9 +1,9 @@
 type: object
 properties:
-    _id:
-        description: 'Contact id'
-        type: string
-        example: 00a0b00000000000c0de0f00
+_id:
+      description: 'Contact id'
+      type: string
+      example: 00a0b00000000000c0de0f00
     name:
         description: 'Contact name'
         type: string
