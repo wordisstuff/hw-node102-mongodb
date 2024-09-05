@@ -26,7 +26,198 @@
   ],
   "paths": {
     "/contacts/{id}": {
-      "get": null
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get contacts by id",
+        "operationId": "getContact",
+        "description": "Get Contacts by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "00a0b00000000000c0de0f00"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get contact by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contact with id 00a0b00000000000c0de0f00"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Contact not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact with id 00a0b00000000000c0de0f00 not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contacts": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create contact",
+        "operationId": "createContact",
+        "description": "Create a comtact",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "userId"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "Contact name",
+                    "type": "string",
+                    "example": "Henry Moor"
+                  },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "HenryMoor@mail.ua"
+                  },
+                  "phoneNumber": {
+                    "description": "Contact phone number",
+                    "type": "string",
+                    "example": "1111111111"
+                  },
+                  "isFavourite": {
+                    "description": "Contact is favourite",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "contactType": {
+                    "description": "Contact type",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "personal",
+                      "home"
+                    ],
+                    "default": "personal",
+                    "example": "work"
+                  },
+                  "userId": {
+                    "description": "ID of the user who created the contact ",
+                    "type": "string",
+                    "example": "00a0b00000000000c0de0f00"
+                  },
+                  "photo": {
+                    "description": "Contact photo",
+                    "type": "string",
+                    "example": "http://localhost:3000/uploads/photo.png",
+                    "default": null
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created contact!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -34,6 +225,109 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "contact": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "email",
+          "phoneNumber",
+          "userId",
+          "isFavourite",
+          "contactType",
+          "photo"
+        ],
+        "properties": {
+          "_id": {
+            "description": "Contact id",
+            "type": "string",
+            "example": "00a0b00000000000c0de0f00"
+          },
+          "name": {
+            "description": "Contact name",
+            "type": "string",
+            "example": "Henry Moor"
+          },
+          "email": {
+            "description": "Contact email",
+            "type": "string",
+            "example": "HenryMoor@mail.ua"
+          },
+          "phoneNumber": {
+            "description": "Contact phone number",
+            "type": "string",
+            "example": "1111111111"
+          },
+          "userId": {
+            "description": "ID of the user who created the contact ",
+            "type": "string",
+            "example": "00a0b00000000000c0de0f00"
+          },
+          "isFavourite": {
+            "description": "Contact is favourite",
+            "type": "boolean",
+            "default": false
+          },
+          "contactType": {
+            "description": "Contact type",
+            "type": "string",
+            "enum": [
+              "work",
+              "personal",
+              "home"
+            ],
+            "default": "personal",
+            "example": "work"
+          },
+          "photo": {
+            "description": "Contact photo",
+            "type": "string",
+            "example": "http://localhost:3000/uploads/photo.png",
+            "default": null
+          }
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

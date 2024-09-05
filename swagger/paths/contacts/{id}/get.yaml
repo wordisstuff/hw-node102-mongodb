@@ -1,5 +1,5 @@
 tags:
-  - Contacts
+    - Contacts
 summary: Get contacts by id
 operationId: getContact
 description: 'Get Contacts by id'
@@ -10,48 +10,47 @@ parameters:
       name: id
       required: true
       schema:
-        type: string
-        example: 00a0b00000000000c0de0f00
+          type: string
+          example: 00a0b00000000000c0de0f00
 responses:
-  '200':
-    description: 'Get contact by id'
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 200
-            message:
-              type: string
-              example: 'Successfully found contact with id 00a0b00000000000c0de0f00'
-            data:
-              type: object
-                $ref: ../../../components/responses/schemas/contact.yaml
-  '401':
-    $ref: ../../../components/responses/401.yaml
-  '404':
-    description: 'Contact not found'
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 404
-            message:
-              type: string
-              example: 'Contact with id 00a0b00000000000c0de0f00 not found'
-            data:
-              type: object
-              example: {}
+    '200':
+        description: 'Get contact by id'
+        content:
+            application/json:
+                schema:
+                    type: object
+                    required:
+                        - status
+                        - message
+                        - data
+                    properties:
+                        status:
+                            type: integer
+                            example: 200
+                        message:
+                            type: string
+                            example: 'Successfully found contact with id 00a0b00000000000c0de0f00'
+                        data:
+                            $ref: ../../../components/responses/schemas/contact.yaml
+    '401':
+        $ref: ../../../components/responses/401.yaml
+    '404':
+        description: 'Contact not found'
+        content:
+            application/json:
+                schema:
+                    type: object
+                    required:
+                        - status
+                        - message
+                        - data
+                    properties:
+                        status:
+                            type: integer
+                            example: 404
+                        message:
+                            type: string
+                            example: 'Contact with id 00a0b00000000000c0de0f00 not found'
+                        data:
+                            type: object
+                            example: {}
