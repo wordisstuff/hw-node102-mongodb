@@ -22,7 +22,8 @@ export const setupServer = () => {
 
     app.get('/', (req, res) =>
         res.send(
-            `Hello! It is Wordisstuff home work.  Click <a href="${tps.domain}${authDb.port}/api-docs/"> Api Docs </a>`,
+            // `Hello! It is Wordisstuff home work.  Click <a href="${tps.domain}${authDb.port}/api-docs/"> Api Docs </a>`,
+            `Hello! It is Wordisstuff home work.  Click <a href="https://nodejs-hw-mongodb-yg1c.onrender.com/api-docs/"> Api Docs </a>`,
         ),
     );
     app.use(Router);
