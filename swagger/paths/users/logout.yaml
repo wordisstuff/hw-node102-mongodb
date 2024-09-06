@@ -1,0 +1,29 @@
+tags:
+    - Auth
+summary: Logout user
+operationId: logoutUser
+description: 'Logout a user'
+security:
+    - bearerAuth: []
+requestBody:
+    content:
+        cookies:
+          sessionId:
+            type: string
+          refreshToken:
+            type: string
+responses:
+    '204':
+        description: 'User logouted!'
+        content:
+            application/json:
+                schema:
+                    type: object
+                    required:
+                        - status
+                    properties:
+                        status:
+                            type: integer
+                            example: 204
+    '401':
+        $ref: ../../components/responses/401.yaml

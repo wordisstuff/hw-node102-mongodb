@@ -1,0 +1,23 @@
+type: object
+required:
+    - _id
+    - name
+    - email
+    - token
+properties:
+    _id:
+        description: 'User id'
+        type: string
+        example: 00a0b00000000000c0de0f00
+    name:
+        description: 'User name'
+        type: string
+        example: 'Henry Moor'
+    email:
+        description: 'User email'
+        type: string
+        example: 'HenryMoor@mail.ua'
+    token:
+        description: 'User acess token'
+        type: string
+        example: 'kkjadfglkas8945789159iahgj'
