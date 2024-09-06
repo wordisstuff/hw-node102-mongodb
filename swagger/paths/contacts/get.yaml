@@ -1,0 +1,79 @@
+tags:
+    - Contacts
+summary: Get all contacts
+operationId: getAllContacts
+description: 'Get all Contacts'
+security:
+    - bearerAuth: []
+parameters:
+    - name: page
+      in: query
+      description: 'Number of page (Default 1)'
+      required: false
+      schema:
+          type: integer
+          default: 1
+    - name: perPage
+      in: query
+      description: 'Number of contacts on page (Default 10)'
+      required: false
+      schema:
+          type: integer
+          default: 10
+    - name: sortBy
+      in: query
+      description: 'Sort for example (name, email)'
+      required: false
+      schema:
+          type: string
+          enum: ['_id','name','phoneNumber','email','isFavorite','contactType','createdAt','updatedAt']
+    - name: sortOrder
+      in: query
+      description: 'Sort order, desc for descending or asc for ascending'
+      required: false
+      schema:
+          type: string
+          enum: [asc,desc]
+          default: asc
+responses:
+    '200':
+        description: 'Get all contacts'
+        content:
+            application/json:
+                schema:
+                    type: object
+                    required:
+                        - status
+                        - message
+                        - data
+                    properties:
+                        status:
+                            type: integer
+                            example: 200
+                        message:
+                            type: string
+                            example: 'Successfully found contacts'
+                        data:
+                            $ref: ../../components/responses/schemas/contacts.yaml
+    '401':
+        $ref: ../../components/responses/401.yaml
+    '404':
+        description: 'Contact not found'
+        content:
+            application/json:
+                schema:
+                    type: object
+                    required:
+                        - status
+                        - message
+                        - data
+                    properties:
+                        status:
+                            type: integer
+                            example: 404
+                        message:
+                            type: string
+                            example: 'Contact not found'
+                        data:
+                            type: object
+                            example: {}

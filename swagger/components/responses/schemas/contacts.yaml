@@ -1,0 +1,36 @@
+type: object
+required:
+    - data
+    - page
+    - perPage
+    - totalItems
+    - totalPages
+    - hasPreviousPage
+    - hasNextPage
+properties:
+    data:
+        $ref: ./contact.yaml
+    page:
+        description: 'Page'
+        type: string
+        example: 2
+    perPage:
+        description: 'Contacts per page'
+        type: string
+        example: 5
+    totalItems:
+        description: 'Total Contact'
+        type: string
+        example: '3'
+    totalPages:
+        description: 'Total pages '
+        type: string
+        example: 10
+    hasPreviousPage:
+        description: 'Has previous page'
+        type: boolean
+        default: false
+    hasNextPage:
+        type: boolean
+        default: false
+        description: 'Has next page'
