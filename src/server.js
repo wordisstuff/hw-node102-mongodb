@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { pinoSettings, UPLOAD_DIR } from './constants/constants.js';
-import { authDb } from './constants/index.js';
+import { authDb, tps } from './constants/index.js';
 import { notFindeMiddleware } from './middlewares/notFindeMiddleware.js';
 
 import Router from './routers/index.js';
@@ -21,7 +21,9 @@ export const setupServer = () => {
     app.use('/uploads', express.static(UPLOAD_DIR));
 
     app.get('/', (req, res) =>
-        res.send('Hello! it is home work 4 from Wordisstuff'),
+        res.send(
+            `Hello! It is Wordisstuff home work.  Click <a href="${tps.domain}${authDb.port}/api-docs/"> Api Docs </a>`,
+        ),
     );
     app.use(Router);
 
