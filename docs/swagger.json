@@ -998,7 +998,8 @@
             "description": "Contact photo",
             "type": "string",
             "example": "http://localhost:3000/uploads/photo.png",
-            "default": null
+            "default": null,
+            "format": "binary"
           }
         }
       },
