@@ -45,7 +45,7 @@ requestBody:
                         description: 'Contact photo'
                         type: string
                         example: 'http://localhost:3000/uploads/photo.png'
-                        default: null
+                        format: binary
 responses:
     '200':
         description: 'Patch contact by id'

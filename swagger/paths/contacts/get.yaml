@@ -2,38 +2,42 @@ tags:
     - Contacts
 summary: Get all contacts
 operationId: getAllContacts
-description: 'Get all Contacts'
+description: 'Get all contacts'
 security:
     - bearerAuth: []
 parameters:
-    - name: page
-      in: query
+    - in: query
+      name: page
       description: 'Number of page (Default 1)'
-      required: false
       schema:
           type: integer
           default: 1
-    - name: perPage
-      in: query
+    - in: query
+      name: perPage
       description: 'Number of contacts on page (Default 10)'
-      required: false
       schema:
           type: integer
           default: 10
-    - name: sortBy
-      in: query
+    - in: query
+      name: sortBy
       description: 'Sort for example (name, email)'
-      required: false
       schema:
           type: string
-          enum: ['_id','name','phoneNumber','email','isFavorite','contactType','createdAt','updatedAt']
-    - name: sortOrder
-      in: query
+          enum:
+              - _id
+              - name
+              - phoneNumber
+              - email
+              - isFavorite
+              - contactType
+              - createdAt
+              - updatedAt
+    - in: query
+      name: sortOrder
       description: 'Sort order, desc for descending or asc for ascending'
-      required: false
       schema:
           type: string
-          enum: [asc,desc]
+          enum: [asc, desc]
           default: asc
 responses:
     '200':
@@ -54,9 +58,9 @@ responses:
                             type: string
                             example: 'Successfully found contacts'
                         data:
-                            $ref: ../../components/responses/schemas/contacts.yaml
+                            $ref: '../../components/responses/schemas/contacts.yaml'
     '401':
-        $ref: ../../components/responses/401.yaml
+        $ref: '../../components/responses/401.yaml'
     '404':
         description: 'Contact not found'
         content:

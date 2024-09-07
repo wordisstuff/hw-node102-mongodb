@@ -484,6 +484,55 @@
             }
           }
         ],
+        "requestBody": {
+          "description": "Properties \"name\", \"phoneNumber\", \"email\", \"isFavourite\", \"contactType\", \"photo\" can be updated!",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Contact name",
+                    "type": "string",
+                    "example": "Henry Moor"
+                  },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "HenryMoor@mail.ua"
+                  },
+                  "phoneNumber": {
+                    "description": "Contact phone number",
+                    "type": "string",
+                    "example": "1111111111"
+                  },
+                  "isFavourite": {
+                    "description": "Contact is favourite",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "contactType": {
+                    "description": "Contact type",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "personal",
+                      "home"
+                    ],
+                    "default": "personal",
+                    "example": "work"
+                  },
+                  "photo": {
+                    "description": "Contact photo",
+                    "type": "string",
+                    "example": "http://localhost:3000/uploads/photo.png",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Patch contact by id",
@@ -632,7 +681,7 @@
         ],
         "summary": "Get all contacts",
         "operationId": "getAllContacts",
-        "description": "Get all Contacts",
+        "description": "Get all contacts",
         "security": [
           {
             "bearerAuth": []
@@ -640,30 +689,27 @@
         ],
         "parameters": [
           {
-            "name": "page",
             "in": "query",
+            "name": "page",
             "description": "Number of page (Default 1)",
-            "required": false,
             "schema": {
               "type": "integer",
               "default": 1
             }
           },
           {
-            "name": "perPage",
             "in": "query",
+            "name": "perPage",
             "description": "Number of contacts on page (Default 10)",
-            "required": false,
             "schema": {
               "type": "integer",
               "default": 10
             }
           },
           {
-            "name": "sortBy",
             "in": "query",
+            "name": "sortBy",
             "description": "Sort for example (name, email)",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -679,10 +725,9 @@
             }
           },
           {
-            "name": "sortOrder",
             "in": "query",
+            "name": "sortOrder",
             "description": "Sort order, desc for descending or asc for ascending",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -775,8 +820,7 @@
                 "type": "object",
                 "required": [
                   "name",
-                  "phoneNumber",
-                  "userId"
+                  "phoneNumber"
                 ],
                 "properties": {
                   "name": {
@@ -810,16 +854,11 @@
                     "default": "personal",
                     "example": "work"
                   },
-                  "userId": {
-                    "description": "ID of the user who created the contact ",
-                    "type": "string",
-                    "example": "00a0b00000000000c0de0f00"
-                  },
                   "photo": {
                     "description": "Contact photo",
                     "type": "string",
                     "example": "http://localhost:3000/uploads/photo.png",
-                    "default": null
+                    "format": "binary"
                   }
                 }
               }
@@ -976,37 +1015,40 @@
         ],
         "properties": {
           "data": {
+            "type": "array",
             "$ref": "#/components/schemas/contact"
           },
           "page": {
             "description": "Page",
-            "type": "string",
+            "type": "number",
             "example": 2
           },
           "perPage": {
             "description": "Contacts per page",
-            "type": "string",
+            "type": "number",
             "example": 5
           },
           "totalItems": {
             "description": "Total Contact",
-            "type": "string",
+            "type": "number",
             "example": "3"
           },
           "totalPages": {
             "description": "Total pages ",
-            "type": "string",
+            "type": "number",
             "example": 10
           },
           "hasPreviousPage": {
             "description": "Has previous page",
             "type": "boolean",
-            "default": false
+            "default": false,
+            "example": true
           },
           "hasNextPage": {
             "type": "boolean",
             "default": false,
-            "description": "Has next page"
+            "description": "Has next page",
+            "example": true
           }
         }
       }
