@@ -11,10 +11,10 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080"
+      "url": "https://nodejs-hw-mongodb-yg1c.onrender.com"
     },
     {
-      "url": "https://nodejs-hw-mongodb-yg1c.onrender.com"
+      "url": "http://localhost:8080"
     }
   ],
   "tags": [
